@@ -1,0 +1,136 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Newsfeed App API
+  description: API for managing posts in a simple newsfeed app
+  contact:
+    name: Ahmad Samir
+    url: https://github.com/ahmadsamir10/
+    email: ahmadsamir2210@gmail.com
+host: localhost:5000
+basePath: /
+schemes:
+  - http
+paths:
+  /posts:
+    post:
+      tags:
+        - Posts
+      summary: Create a new post
+      description: Adds a new post to the newsfeed
+      operationId: createPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Post object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/Post'
+      responses:
+        '201':
+          description: Post created successfully
+          schema:
+            $ref: '#/definitions/PostResponse'
+        '400':
+          description: Validation error
+  /posts/{post_id}:
+    get:
+      tags:
+        - Posts
+      summary: Get a post by ID
+      description: Returns a single post
+      operationId: getPost
+      produces:
+        - application/json
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the post to retrieve
+      responses:
+        '200':
+          description: Post retrieved successfully
+          schema:
+            $ref: '#/definitions/PostResponse'
+        '404':
+          description: Post not found
+    put:
+      tags:
+        - Posts
+      summary: Update a post by ID
+      description: Updates the content of an existing post
+      operationId: updatePost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the post to update
+        - in: body
+          name: body
+          description: Post object with updated content
+          required: true
+          schema:
+            $ref: '#/definitions/Post'
+      responses:
+        '200':
+          description: Post updated successfully
+        '400':
+          description: Validation error
+    delete:
+      tags:
+        - Posts
+      summary: Delete a post by ID
+      description: Deletes a post from the newsfeed
+      operationId: deletePost
+      produces:
+        - application/json
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          type: integer
+          description: ID of the post to delete
+      responses:
+        '200':
+          description: Post deleted successfully
+        '404':
+          description: Post not found
+definitions:
+  Post:
+    type: object
+    required:
+      - user_id
+      - content
+    properties:
+      user_id:
+        type: integer
+        description: ID of the user creating the post
+      content:
+        type: string
+        description: Content of the post
+  PostResponse:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the post
+      user_id:
+        type: integer
+        description: ID of the user
+      content:
+        type: string
+        description: Content of the post
+      created_at:
+        type: string
+        format: date-time
+        description: Timestamp when the post was created
